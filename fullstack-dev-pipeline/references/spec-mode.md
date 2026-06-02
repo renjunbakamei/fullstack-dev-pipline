@@ -6,7 +6,7 @@
 
 ## Spec 文件模板
 
-每份 spec 基于 `~/.claude/templates/spec_template.md` 创建，包含以下结构：
+每份 spec 基于 `../templates/spec_template.md` 创建，包含以下结构：
 
 ```markdown
 # Spec-XXX: <任务名称>
@@ -60,7 +60,7 @@ PMO 委派后执行：
 
 1. 读取 `03-arch/` 下全部架构文档，理解模块边界和接口契约。
 2. 读取 `05-change-impact/change_impact_analysis.md`，了解改动范围和文件清单。
-3. 读取 `~/.claude/templates/spec_template.md`。
+3. 读取 `../templates/spec_template.md`。
 4. 按模块拆解任务，生成独立的 spec 文件，放入 `06-pmo/specs/`：
    ```
    06-pmo/

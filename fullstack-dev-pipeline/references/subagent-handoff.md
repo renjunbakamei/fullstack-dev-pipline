@@ -132,7 +132,7 @@
 
 **扩展阅读：** 无（PM 的输入就是用户需求本身）
 
-**输出要求：** 读取 `~/.claude/templates/prd_template.md`、`requirements_breakdown_template.md`、`priority_matrix_template.md` 后生成对应文件。
+**输出要求：** 读取 `../templates/prd_template.md`、`requirements_breakdown_template.md`、`priority_matrix_template.md` 后生成对应文件。
 
 ---
 
@@ -149,7 +149,7 @@
 - `project-doc/<feature>/01-prd/prd.md` — 完整需求细节
 - `project-doc/<feature>/01-prd/requirements_breakdown.md` — 需求拆解
 
-**输出要求：** 读取 `~/.claude/templates/review_report_demand_template.md` 后生成评审报告。
+**输出要求：** 读取 `../templates/review_report_demand_template.md` 后生成评审报告。
 
 ---
 
@@ -164,7 +164,7 @@
 **扩展阅读：**
 - `project-doc/<feature>/01-prd/prd.md` — 完整需求文档
 
-**输出要求：** 读取 `~/.claude/templates/system_architecture_template.md`、`module_design_template.md`、`database_design_template.md`、`api_design_template.md` 后生成 4 份设计文档。
+**输出要求：** 读取 `../templates/system_architecture_template.md`、`module_design_template.md`、`database_design_template.md`、`api_design_template.md` 后生成 4 份设计文档。
 
 ---
 
@@ -183,7 +183,7 @@
 - `project-doc/<feature>/03-arch/database_design.md` — 数据库设计
 - `project-doc/<feature>/03-arch/api_design.md` — API 设计
 
-**输出要求：** 读取 `~/.claude/templates/review_report_tech_template.md` 和 `risk_assessment_template.md` 后生成评审报告。
+**输出要求：** 读取 `../templates/review_report_tech_template.md` 和 `risk_assessment_template.md` 后生成评审报告。
 
 ---
 
@@ -199,7 +199,7 @@
 - `project-doc/<feature>/03-arch/` — 完整架构设计
 - 现有代码库 — 分析改动点（如适用）
 
-**输出要求：** 读取 `~/.claude/templates/change_impact_analysis_template.md` 后生成 `change_impact_analysis.md`，包含改动文件清单、改动边界、依赖影响分析、改动统计。放入 `05-change-impact/`。
+**输出要求：** 读取 `../templates/change_impact_analysis_template.md` 后生成 `change_impact_analysis.md`，包含改动文件清单、改动边界、依赖影响分析、改动统计。放入 `05-change-impact/`。
 
 ---
 
@@ -217,7 +217,7 @@
 - `project-doc/<feature>/05-change-impact/change_impact_analysis.md` — 改动点分析
 - `references/spec-mode.md` — Spec 拆解规范
 
-**输出要求：** 读取 `~/.claude/templates/spec_template.md`、`task_breakdown_template.md`、`schedule_template.md` 后生成 task_breakdown + schedule + specs/。放入 `06-pmo/`。
+**输出要求：** 读取 `../templates/spec_template.md`、`task_breakdown_template.md`、`schedule_template.md` 后生成 task_breakdown + schedule + specs/。放入 `06-pmo/`。
 
 ---
 
@@ -261,7 +261,7 @@
 - `project-doc/<feature>/06-pmo/specs/` — 完整 spec（需要测试细节时）
 - `project-doc/<feature>/01-prd/prd.md` — 完整需求
 
-**输出要求：** 读取 `~/.claude/templates/test_cases_template.md` 后生成 `test_cases.md`。放入 `07-dev-qa/`。
+**输出要求：** 读取 `../templates/test_cases_template.md` 后生成 `test_cases.md`。放入 `07-dev-qa/`。
 
 ---
 
@@ -289,7 +289,7 @@
 - `project-doc/<feature>/06-pmo/specs/` — 完整 spec（检查需求覆盖时）
 - `project-doc/<feature>/07-dev-qa/test_cases.md` — 测试用例
 
-**输出要求：** 读取 `~/.claude/templates/code_review_report_template.md` 后生成审查报告。审查 `07-dev-qa/src/` 下全部源码。报告必须包含编译验证结果、改动范围检查结果和代码质量评分。放入 `08-code-review/`。
+**输出要求：** 读取 `../templates/code_review_report_template.md` 后生成审查报告。审查 `07-dev-qa/src/` 下全部源码。报告必须包含编译验证结果、改动范围检查结果和代码质量评分。放入 `08-code-review/`。
 
 ---
 
@@ -306,7 +306,7 @@
 - `project-doc/<feature>/06-pmo/specs/` — spec 验收条件
 - `project-doc/<feature>/07-dev-qa/src/` — 源码
 
-**输出要求：** 读取 `~/.claude/templates/bug_list_template.md` 后执行测试并生成 `bug_list.md`。放入 `09-qa/`。
+**输出要求：** 读取 `../templates/bug_list_template.md` 后执行测试并生成 `bug_list.md`。放入 `09-qa/`。
 
 ---
 
@@ -324,7 +324,7 @@
 **扩展阅读：**
 - `project-doc/<feature>/` — 全部阶段产物（需要详细数据时）
 
-**输出要求：** QA 读取 `~/.claude/templates/quality_report_template.md` 生成 `quality_report.md`；PMO 生成 `project_summary.md`。放入 `10-qa-report/`。
+**输出要求：** QA 读取 `../templates/quality_report_template.md` 生成 `quality_report.md`；PMO 生成 `project_summary.md`。放入 `10-qa-report/`。
 
 ---
 
@@ -336,3 +336,4 @@
 4. **扩展阅读指向具体文件**：不写「读 03-arch/ 下全部文件」，而是列出具体文件名及"什么情况下需要读"。
 5. **模板文件必须放在输出要求中**：subagent 生成文档前必须读模板，这是强制步骤。
 6. **developer 的上下文摘要要在每次领取 spec 时即时生成**：包含该 spec 的接口契约、数据表、依赖 spec 的产出摘要。
+7. **每个阶段结束后立即更新 token 数据**：从 Agent 工具返回结果中提取 usage 信息，写入 `status.json` 对应阶段的 `token_usage.stages.stageN`，确保中断后可恢复查看。多 SubAgent 阶段（如阶段7）汇总所有调用后写入。

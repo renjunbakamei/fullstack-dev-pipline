@@ -37,7 +37,7 @@
 
 **输出：**
 - **Wiki检索结果**（如果执行了检索）：`00-context/wiki_context.md`，包含相关功能、架构信息、最佳实践等参考内容。
-- 若为**简单需求**：生成 `requirement_brief.md`（轻量需求说明，基于 `~/.claude/templates/requirement_brief_template.md`），放入 `01-prd/`。
+- 若为**简单需求**：生成 `requirement_brief.md`（轻量需求说明，基于 `../templates/requirement_brief_template.md`），放入 `01-prd/`。
 - 若为**复杂需求**：不做额外产出，进入阶段 1。
 
 **目录初始化：** 确认 feature 名称后立即执行：
@@ -52,8 +52,9 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 - **复杂需求**：继续阶段 1。更新 `status.json` 中 `status` 为 `requirement_confirmed`。
 
 **Token消耗记录：**
-- 阶段0结束时，调度器必须记录本阶段的token消耗到 `status.json` 的 `token_usage.stages.stage0.tokens`
-- 包括：wiki检索（如有）、复杂度评估、用户交互等所有消耗
+- 阶段0结束时，调度器必须从API返回的usage信息中提取并记录本阶段的token消耗到 `status.json` 的 `token_usage.stages.stage0`
+- 填写字段：`tokens`、`input_tokens`、`output_tokens`、`cache_read_input_tokens`、`cache_creation_input_tokens`、`model`、`recorded_at`
+- 更新 `token_usage.breakdown.scheduler_tokens`（阶段0无SubAgent调用，`subagent_tokens` 为0）
 - 同时更新 `token_usage.total_tokens` 累计值
 
 ---
@@ -63,7 +64,7 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 - **触发条件**：仅当 `status.json` 中 `complexity = "complex"` 时执行。简单需求跳过此阶段和阶段 2。
 - **动作**：如果用户输入为一个飞书链接，则调用 skill:feishu-docs 提取文档；如果是一段话则委派 `product-manager` SubAgent。
 - **输入**：用户原始需求 + 补充信息，或飞书文档内容。
-- **输出要求**：必须生成 `prd.md`、`requirements_breakdown.md`、`priority_matrix.md`，放入 `01-prd/` 文件夹。每个文档基于 `~/.claude/templates/` 下的对应模板创建。
+- **输出要求**：必须生成 `prd.md`、`requirements_breakdown.md`、`priority_matrix.md`，放入 `01-prd/` 文件夹。每个文档基于 `../templates/` 下的对应模板创建。
 - **验收**：检查文件是否存在且内容完整。若不合格，要求 PM 重新输出。
 - **交互模式**：非关键阶段交互协议（模式 B）— 展示摘要，30 秒宽限期后自动推进。
 - **状态更新**：更新 `status.json` 中 `status` 为 `prd生成完成`。
@@ -73,7 +74,7 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 - **触发条件**：仅当 `status.json` 中 `complexity = "complex"` 时执行。
 - **动作**：委派 `general-purpose` SubAgent（注入 CTO 角色身份）对阶段 1 的输出进行评审。
 - **输入**：PM 产出的所有文档（`01-prd/` 下全部文件）。
-- **输出要求**：生成 `review_report_demand.md`，基于 `~/.claude/templates/review_report_demand_template.md`，并给出结论（通过/需修改/拒绝）。放入 `02-cto-review/`。
+- **输出要求**：生成 `review_report_demand.md`，基于 `../templates/review_report_demand_template.md`，并给出结论（通过/需修改/拒绝）。放入 `02-cto-review/`。
 - **分支处理**：
   - 若「通过」→ 采用**关键阶段交互协议（模式 A）**，暂停并等待用户确认。用户确认后更新 `status.json` 中 `status` 为 `prd评审通过`，进入阶段 3。
   - 若「需修改」→ 将修改意见回传给 PM，重复阶段 1（最多迭代 3 次）。
@@ -88,7 +89,7 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 - **输入**：需求文档（复杂需求为 PRD，简单需求为 `requirement_brief.md`）。
 - **输出要求（根据复杂度）**：
   - **简单需求**：生成 `tech_design.md`（1份合并文档，包含系统架构、模块设计、数据库设计、API设计），放入 `03-arch/`。
-  - **复杂需求**：生成 `system_architecture.md`、`module_design.md`、`database_design.md`、`api_design.md`（4份独立文档），放入 `03-arch/`。每个文档基于 `~/.claude/templates/` 下的对应模板创建。
+  - **复杂需求**：生成 `system_architecture.md`、`module_design.md`、`database_design.md`、`api_design.md`（4份独立文档），放入 `03-arch/`。每个文档基于 `../templates/` 下的对应模板创建。
 - **验收**：确认所有设计文档覆盖需求中的核心功能。
 - **交互模式**：非关键阶段交互协议（模式 B）— 展示摘要，30 秒宽限期后自动推进。
 - **状态更新**：验收通过后更新 `status.json` 中 `status` 为 `技术方案生成完成`。
@@ -101,7 +102,7 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 - **输入**：`03-arch/` 下全部设计文档。
 - **输出要求（根据复杂度）**：
   - **简单需求**：生成 `review_report_tech.md`（1份），放入 `04-cto-tech-review/`。
-  - **复杂需求**：生成 `review_report_tech.md`（基于 `~/.claude/templates/review_report_tech_template.md`）和 `risk_assessment.md`（基于 `~/.claude/templates/risk_assessment_template.md`）（2份），放入 `04-cto-tech-review/`。
+  - **复杂需求**：生成 `review_report_tech.md`（基于 `../templates/review_report_tech_template.md`）和 `risk_assessment.md`（基于 `../templates/risk_assessment_template.md`）（2份），放入 `04-cto-tech-review/`。
 - **分支处理**：
   - 若「通过」→ 采用**关键阶段交互协议（模式 A）**，暂停并等待用户确认。用户确认后更新 `status.json` 中 `status` 为 `技术方案评审通过`，进入阶段 5。
   - 若「需修改」→ 将修改意见回传给架构师，重复阶段 3（最多迭代 3 次）。
@@ -112,7 +113,7 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 - **触发条件**：始终执行。
 - **动作**：委派 `developer` SubAgent。
 - **输入**：`03-arch/` 下的架构设计文档 + 需求文档 + 现有代码库（如适用）。
-- **输出要求**：生成 `change_impact_analysis.md`（基于 `~/.claude/templates/change_impact_analysis_template.md`），放入 `05-change-impact/`，包含：
+- **输出要求**：生成 `change_impact_analysis.md`（基于 `../templates/change_impact_analysis_template.md`），放入 `05-change-impact/`，包含：
   1. **改动文件清单**（新增/修改/删除文件列表，含改动原因、关联需求、预估行数）
   2. **改动边界声明**（允许改动的范围、禁止改动的范围、例外情况处理）
   3. **依赖影响分析**（上游依赖、下游影响、风险点）
@@ -231,7 +232,7 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 - **动作**：同时委派 `developer` 和 `general-purpose`（注入 QA 角色身份）SubAgent。
   - **开发任务（Spec 驱动）**：调度器读取 `task_breakdown.md` 获取依赖图，developer 按依赖顺序逐个领取 spec（流程详见 `references/spec-mode.md`）。每份 spec 是 self-contained 的任务包，developer 读取后即可开始编码，无需来回翻阅架构文档。源代码放入 `07-dev-qa/src/`。
   - **改动范围约束**：Developer 只能修改 `05-change-impact/change_impact_analysis.md` 中列出的文件。如需修改未列出的文件，必须更新该文档的"例外改动"章节并说明原因。
-  - **测试设计**：QA 同步读取所有 spec 文件，基于每份 spec 的「验收条件」和「QA 测试要点」编写 `test_cases.md`（基于 `~/.claude/templates/test_cases_template.md`）。放入 `07-dev-qa/`。
+  - **测试设计**：QA 同步读取所有 spec 文件，基于每份 spec 的「验收条件」和「QA 测试要点」编写 `test_cases.md`（基于 `../templates/test_cases_template.md`）。放入 `07-dev-qa/`。
 - **编码质量要求（Karpathy Guidelines）**：developer 在编码时必须遵循以下原则：
   1. **简单优先** — 最少代码解决问题，不添加未被要求的功能、抽象或配置
   2. **手术式修改** — 只修改必须修改的代码，匹配现有风格，不重构无关代码
@@ -261,7 +262,7 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 - **触发条件**：始终执行。
 - **动作**：委派 `general-purpose` SubAgent（注入代码审查工程师角色身份）。
 - **输入**：`07-dev-qa/` 下全部源码 + `03-arch/` 设计文档 + `05-change-impact/change_impact_analysis.md` + `07-dev-qa/test_cases.md`。
-- **输出要求**：生成 `code_review_report.md`，基于 `~/.claude/templates/code_review_report_template.md`。放入 `08-code-review/`。
+- **输出要求**：生成 `code_review_report.md`，基于 `../templates/code_review_report_template.md`。放入 `08-code-review/`。
 - **审查维度**：
   1. **编译验证（强制执行）** — 必须先执行编译验证，通过后才能继续其他审查：
      ```
@@ -303,7 +304,7 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 ## 阶段 9：测试与缺陷修复（迭代）
 
 - **触发条件**：始终执行。
-- **动作**：`general-purpose` SubAgent（注入 QA 角色身份）执行测试（基于 `test_cases.md`），输出 `bug_list.md`（基于 `~/.claude/templates/bug_list_template.md`）。每个 bug 自动指派给对应的 developer。
+- **动作**：`general-purpose` SubAgent（注入 QA 角色身份）执行测试（基于 `test_cases.md`），输出 `bug_list.md`（基于 `../templates/bug_list_template.md`）。每个 bug 自动指派给对应的 developer。
 - **循环**：修复 → 回归 → 直至所有致命/严重 bug 关闭。
 - **出口条件**：测试用例通过率 ≥ 95%（可配置），且无致命级 bug。
 - **交互模式**：非关键阶段交互协议（模式 B）。
@@ -312,7 +313,7 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 ## 阶段 10：质量验收与项目总结
 
 - **触发条件**：始终执行。
-- **动作**：委派 `general-purpose` SubAgent（注入 QA 角色身份）输出 `quality_report.md`（基于 `~/.claude/templates/quality_report_template.md`）。放入 `10-qa-report/`。
+- **动作**：委派 `general-purpose` SubAgent（注入 QA 角色身份）输出 `quality_report.md`（基于 `../templates/quality_report_template.md`）。放入 `10-qa-report/`。
 - **输出要求（根据复杂度）**：
   - **简单需求**：仅生成 `quality_report.md`（1份）。
   - **复杂需求**：生成 `quality_report.md` + `project_summary.md`（2份，后者由 `project-manager` 输出）。
@@ -320,10 +321,12 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
   - 调度器读取 `status.json` 中的 `token_usage` 数据
   - 生成 `token_usage_report.md`，包含：
     - 总token消耗
-    - 各阶段token消耗明细（表格形式）
-    - 各阶段占比分析
+    - 各阶段token消耗明细表（tokens / input / output / cache / subagent 分列）
+    - 各阶段占比分析（含饼图数据）
+    - 调度器 vs SubAgent 消耗对比
+    - 缓存命中率分析（cache_read / total_input）
     - 简单需求 vs 复杂需求的对比（如有历史数据）
-    - 优化建议（识别token消耗异常高的阶段）
+    - 优化建议（识别token消耗异常高的阶段，分析缓存优化空间）
   - 放入 `10-qa-report/`
 - **交互模式**：非关键阶段交互协议（模式 B）。
 - **最终结论**：向用户汇报"✅ 可上线"或"⚠️ 有条件上线（附风险）"，并展示token消耗统计摘要。

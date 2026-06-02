@@ -3,17 +3,18 @@
 ## 流程约束
 
 - 每个阶段必须收到明确的输出文件后才能推进。
-- **关键阶段（阶段 2、阶段 4、阶段 8）**：评审通过后必须暂停并等待用户人工确认，采用关键阶段交互协议（模式 A）。
+- **关键阶段（阶段 2、阶段 4、阶段 7、阶段 8）**：评审通过后（阶段 7 为开发启动确认门禁）必须暂停并等待用户人工确认，采用关键阶段交互协议（模式 A）。
 - **非关键阶段**：产出后展示摘要，30 秒宽限期后自动推进，采用非关键阶段交互协议（模式 B）。
 - **技术方案门禁**：阶段 7 开发开始前，调度器须验证架构设计文档齐备、`05-change-impact/change_impact_analysis.md` 存在、status 达到「改动点识别完成」且 `06-pmo/specs/` 目录存在。门禁不通过则终止开发任务。
 - 任何阶段失败（评审拒绝或迭代超限），立即终止并告知用户失败原因和已有产物。
 
 ## 目录结构
 
-所有产物保存在 `./project-doc/<feature名称>/` 下，按阶段分 10 个子文件夹：
+所有产物保存在 `./project-doc/<feature名称>/` 下，按阶段分 11 个子文件夹：
 
 | 目录 | 内容 |
 |------|------|
+| `00-context/` | Wiki 检索结果与项目上下文 |
 | `01-prd/` | PM 产出 / 简单需求的轻量需求说明 |
 | `02-cto-review/` | 需求评审产出 |
 | `03-arch/` | 架构设计产出 |
@@ -27,9 +28,9 @@
 
 ## 模板约束
 
-每个阶段生成的 md 文档必须基于 `~/.claude/templates/` 目录下的对应模板文件（`<文档名>_template.md`）创建。各 SubAgent 在生成文档前必须先读取对应模板，严格遵循模板的章节结构和格式要求。
-- **Spec 模板**：阶段6 PMO 生成的每个 spec 文件必须基于 `~/.claude/templates/spec_template.md` 创建（详见 `references/spec-mode.md`）。
-- **改动点识别模板**：阶段5 Developer 生成的 `change_impact_analysis.md` 必须基于 `~/.claude/templates/change_impact_analysis_template.md` 创建。
+每个阶段生成的 md 文档必须基于 `../templates/` 目录下的对应模板文件（`<文档名>_template.md`）创建。各 SubAgent 在生成文档前必须先读取对应模板，严格遵循模板的章节结构和格式要求。
+- **Spec 模板**：阶段6 PMO 生成的每个 spec 文件必须基于 `../templates/spec_template.md` 创建（详见 `references/spec-mode.md`）。
+- **改动点识别模板**：阶段5 Developer 生成的 `change_impact_analysis.md` 必须基于 `../templates/change_impact_analysis_template.md` 创建。
 
 ## 改动范围约束
 

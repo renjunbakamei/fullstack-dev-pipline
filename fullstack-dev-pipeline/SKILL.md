@@ -78,15 +78,40 @@ mkdir -p ./project-doc/<feature名称>/{00-context,01-prd,02-cto-review,03-arch,
 
 # Token消耗追踪与优化
 
-调度器在整个流程中自动追踪每个阶段的token消耗，用于成本分析和流程优化：
+调度器在整个流程中自动追踪每个阶段的token消耗，支持中断恢复查看：
 
-- **自动记录**：每个阶段结束时，将SubAgent返回的 `total_tokens` 记录到 `status.json`
-- **最终报告**：阶段10生成 `token_usage_report.md`，包含：
-  - 总token消耗和各阶段明细
-  - 各阶段占比分析
-  - 异常高消耗阶段识别
-  - 优化建议
-- **持续优化**：通过历史数据对比，识别可优化的环节
+## 记录粒度
+
+每个阶段结束时，从API返回的usage信息中提取以下字段写入 `status.json`：
+
+| 字段 | 说明 | 来源 |
+|------|------|------|
+| `tokens` | 该阶段总token消耗 | 累计 |
+| `input_tokens` | 输入token数 | API `usage.input_tokens` |
+| `output_tokens` | 输出token数 | API `usage.output_tokens` |
+| `cache_read_input_tokens` | 缓存命中节省的token | API `usage.cache_read_input_tokens` |
+| `cache_creation_input_tokens` | 缓存写入消耗的token | API `usage.cache_creation_input_tokens` |
+| `subagent_tokens` | SubAgent调用消耗（0=无SubAgent） | API `total_tokens` |
+| `model` | 使用的模型（sonnet/opus/haiku） | 调度器记录 |
+| `recorded_at` | 记录时间戳 | 调度器生成 |
+
+同时汇总维护 `breakdown.scheduler_tokens` 和 `breakdown.subagent_tokens`。
+
+## 记录时机
+
+- **立即更新**：每个阶段结束时立即写入 `status.json`，确保流程中断后仍可查看已完成阶段的消耗
+- **阶段内多次SubAgent调用**：汇总后写入（如阶段7同时委派developer和QA）
+- **迭代修订**：每次修订产生的token消耗累加到该阶段的各字段
+
+## 最终报告
+
+阶段10生成 `token_usage_report.md`，包含：
+- 总token消耗和各阶段明细（input/output/cache/subagent分列）
+- 各阶段占比分析
+- 调度器 vs SubAgent 消耗对比
+- 缓存命中率分析
+- 异常高消耗阶段识别
+- 优化建议
 
 # 调用示例
 
